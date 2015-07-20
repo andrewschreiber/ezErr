@@ -43,7 +43,7 @@ if (! ezErr(error, @"No foo for you"))
 ### Skip the if
 ```Objective-C
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-// Idiomatic
+// Boilerplate
     if (error){
       NSLog(@"Connection did not succeed. Error description:%@ . Error domain :%@". Error code:%@", error.localizedDescription, error.domain, error.code);
       }
@@ -57,7 +57,7 @@ if (! ezErr(error, @"No foo for you"))
 ```Objective-C
 [DatabaseAPI getThingyFromDodad: myDodad callback:^(Thingy * myThingy, NSError *error) {
  
-// Idiomatic
+// Boilerplate
  if (!myThing){
     NSLog(@"Couldn't get thing from dodad: %@. Got error: %@", myDodad, [error localizedDescription]);
     return;
@@ -75,7 +75,7 @@ if (! ezErr(error, @"No foo for you"))
  {
      [DatabaseAPI fetchTumBookInfoWithCallback:^(NSError *err)
      {
-         // Idiomatic
+         // Boilerplate
          if (err)
          {
              NSLog(@"Error with TumBook info from cache. Error: %@", [err localizedDescription]);
@@ -110,3 +110,14 @@ If a Cocoa method returns both a BOOL success (or object) _AND_ an NSError, you 
 
 To quote Apple docs, "When dealing with errors passed by reference, it’s important to test the return value of the method to see whether an error occurred... Don’t just test to see whether the error pointer was set to point to an error." This is because some Cocoa methods use the NSError you pass in as temporary memory, and will not reset your NSError to nil even upon success. Though I've never seen this phenomenon in a 3rd-party API, it's good to be safe. 
     
+#Installation
+Download ezErr.h and add it to your project. Import where needed.
+
+#Requirements
+*ARC
+
+#Reach out
+Message me on twitter at @thelastalias 
+
+#License
+MIT
