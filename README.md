@@ -11,7 +11,6 @@ NSError *err = [NSError errorWithDomain:@"testDomain"
                                   userInfo:userInfo];
     
 ezErr(err, @"Demoing ezErr") 
-// This is macro #1
 // The 2nd argument is an optional NSString* for context-relevant info
 ```
 Calling ezErr logs this into the console:
