@@ -1,9 +1,9 @@
 # ezErr
 Never NSLog an error again.
 
-ezErr replaces NSError-handling boilerplate with more functionality, including *detailed logs*,  *error data export*, and *tighter conditionals*. 
+ezErr replaces NSError-handling boilerplate with *detailed logs*,  *error data export*, and *tighter conditionals*. 
 
-## logging
+## Logging
 ```
 NSDictionary *userInfo = @{ NSLocalizedDescriptionKey : @"This is an example localized Description"};
 NSError *err = [NSError errorWithDomain:@"testDomain" 
@@ -16,8 +16,8 @@ Calling ezErr logs this into the console:
 
 ![](http://i.imgur.com/Ht7rGDa.png)
 
-## export
-Also ezErr posts a notification, kEzErrNotification, with the error data as the userInfo dictionary. Useful for analytics or informing the user.
+## Export
+ezErr will also post a notification, kEzErrNotification, with the error data as the userInfo dictionary. Useful for analytics or informing the user.
 ```
     kEzErrCodeKey = 4;
     kEzErrDateKey = "2015-07-20 14:47:38 +0000";
@@ -29,20 +29,57 @@ Also ezErr posts a notification, kEzErrNotification, with the error data as the 
     kEzErrThreadKey = 1;
 ```
 
-## tighter conditionals
-ezErr will log if and only if the NSError is a valid instance, removing the need for if checks on the error. 
+## Tighter conditionals
+ezErr will log and export if and only if the NSError is a valid instance, removing the need for if checks on errors. 
 ```
- - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
- // Idiomatic NSError pattern #1
- if (error){
-    NSLog(@"Connection did not succeed. Error description:%@ . Error domain :%@". Error code:%@", error.localizedDescription, error.domain, error.code);
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+    if (error){
+      NSLog(@"Connection did not succeed. Error description:%@ . Error domain :%@". Error code:%@", error.localizedDescription, error.domain, error.code);
       }
  }
  
- - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
- //ezErr counter-pattern #1
- ezErr(error, @"Connection did not succeed");
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+    ezErr(error, @"Connection did not succeed");
  }
+```
+
+ezErr is safe from malformed NSError instances.
+```
+NSError *unsafeError = [NSError new];
+// or unsafeError = [NSError errorWithDomain:nil code:5 userInfo: nil];
+
+NSLog(@"Wonder what's in here ... %@", [unsafeError localizedDescription]);
+// Crashes, SIGKILL
+
+ezErr(unsafeError, @"Hmmm");
+// Does nothing
+```
+
+ezErr can be used as a conditional
+```
+[myObject fooWithError:&error];
+
+if (! ezErr(error, @"No foo for you."))
+{
+     bar();
+}
+```
+
+Alternatively, if ezErrReturn finds an error it will return the method after logging and notifying
+```
+[DatabaseAPI getThingyFromDodad: myDodad callback:^(Thingy * myThingy, NSError *error) {
+ 
+// Idiomatic
+ if (!myThing){
+    NSLog(@"Couldn't get thing from dodad: %@. Got error: %@", myDodad, [error localizedDescription]);
+    return;
+ }
+ 
+// ezErr
+ if (!myThing){
+    ezErrReturn(error, [NSString stringWithFormat:@"Couldn't get thing from dodad: %@",myDodad);
+     }
+}
 ```
 
 
