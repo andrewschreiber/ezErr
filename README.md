@@ -5,18 +5,19 @@ ezErr replaces NSError-handling boilerplate with more functionality, including *
 
 ## logging
 ```
+NSDictionary *userInfo = @{ NSLocalizedDescriptionKey : @"This is an example localized Description"};
 NSError *err = [NSError errorWithDomain:@"testDomain" 
                                    code:4 
-                                  userInfo:@{NSLocalizedDescriptionKey: @"This is an example localized Description"}];
+                                  userInfo:userInfo];
     
 ezErr(err, @"Demoing ezErr") // The 2nd argument is an optional NSString* for context-relevant info
 ```
-Logs this into the console:
+Calling ezErr logs this into the console:
 
 ![](http://i.imgur.com/Ht7rGDa.png)
 
 ## export
-And posts a userInfo dictionary with notification name kEzErrNotification
+Also ezErr posts a notification, kEzErrNotification, with the error data as the userInfo dictionary. Useful for analytics or informing the user.
 ```
     kEzErrCodeKey = 4;
     kEzErrDateKey = "2015-07-20 14:47:38 +0000";
@@ -32,13 +33,15 @@ And posts a userInfo dictionary with notification name kEzErrNotification
 ezErr will log if and only if the NSError is a valid instance, removing the need for if checks on the error. 
 ```
  - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
- //ezErr
- ezErr(error, nil);
- 
- // Idiomatic
+ // Idiomatic NSError pattern #1
  if (error){
-    NSLog(@"Connection failed. Error description:%@ . Error domain :%@". Error code:%@", error.localizedDescription, error.domain, error.code);
+    NSLog(@"Connection did not succeed. Error description:%@ . Error domain :%@". Error code:%@", error.localizedDescription, error.domain, error.code);
+      }
  }
+ 
+ - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+ //ezErr counter-pattern #1
+ ezErr(error, @"Connection did not succeed");
  }
 ```
 
