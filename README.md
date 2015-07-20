@@ -1,7 +1,7 @@
 # ezErr
 Never NSLog an error again!
 
-ezErr are three macros that replace NSError-handling boilerplate with *detailed logs*, *error data export*, *tighter conditionals*, and *more safety*. 
+ezErr consists of three macros that replace NSError-handling boilerplate with *detailed logs*, *error data export*, *tighter conditionals*, and *more safety*. 
 
 ## Logging
 ```Objective-C
