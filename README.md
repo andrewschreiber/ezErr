@@ -4,15 +4,15 @@ Never NSLog an error again!
 ezErr are three macros that replace NSError-handling boilerplate with *detailed logs*, *error data export*, *tighter conditionals*, and *more safety*. 
 
 ## Logging
-```
-NSDictionary *userInfo = @{ NSLocalizedDescriptionKey : @"This is an example localized Description"};
-NSError *err = [NSError errorWithDomain:@"testDomain" 
+
+    NSDictionary *userInfo = @{ NSLocalizedDescriptionKey : @"This is an example localized Description"};
+    NSError *err = [NSError errorWithDomain:@"testDomain" 
                                    code:4 
                                   userInfo:userInfo];
     
-ezErr(err, @"Demoing ezErr") 
-// The 2nd argument is an optional NSString for context-relevant info
-```
+    ezErr(err, @"Demoing ezErr") 
+    // The 2nd argument is an optional NSString for context-relevant info
+
 Calling ezErr logs this into the console:
 
 ![](http://i.imgur.com/Ht7rGDa.png)
