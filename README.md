@@ -1,7 +1,7 @@
 # ezErr
 Never NSLog an error again.
 
-ezErr replaces NSError-handling boilerplate with *detailed logs*,  *error data export*, and *tighter conditionals*. 
+ezErr are three macros that replace NSError-handling boilerplate with *detailed logs*, *error data export*, *tighter conditionals*, and *more safety*. 
 
 ## Logging
 ```
@@ -10,7 +10,9 @@ NSError *err = [NSError errorWithDomain:@"testDomain"
                                    code:4 
                                   userInfo:userInfo];
     
-ezErr(err, @"Demoing ezErr") // The 2nd argument is an optional NSString* for context-relevant info
+ezErr(err, @"Demoing ezErr") 
+// This is macro #1
+// The 2nd argument is an optional NSString* for context-relevant info
 ```
 Calling ezErr logs this into the console:
 
@@ -30,42 +32,29 @@ ezErr will also post a notification, kEzErrNotification, with the error data as 
 ```
 
 ## Tighter conditionals
-ezErr will log and export if and only if the NSError is a valid instance, removing the need for if checks on errors. 
-```
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-    if (error){
-      NSLog(@"Connection did not succeed. Error description:%@ . Error domain :%@". Error code:%@", error.localizedDescription, error.domain, error.code);
-      }
- }
- 
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-    ezErr(error, @"Connection did not succeed");
- }
-```
-
-ezErr is safe from malformed NSError instances.
-```
-NSError *unsafeError = [NSError new];
-// or unsafeError = [NSError errorWithDomain:nil code:5 userInfo: nil];
-
-NSLog(@"Wonder what's in here ... %@", [unsafeError localizedDescription]);
-// Crashes, SIGKILL
-
-ezErr(unsafeError, @"Hmmm");
-// Does nothing
-```
-
-ezErr can be used as a conditional
+ezErr can be embedded in an if statement, and will still log and export if the NSError is valid.
 ```
 [myObject fooWithError:&error];
-
-if (! ezErr(error, @"No foo for you."))
+if (! ezErr(error, @"No foo for you"))
 {
      bar();
 }
 ```
 
-Alternatively, if ezErrReturn finds an error it will return the method after logging and notifying
+### Skip the if
+```
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+// Idiomatic
+    if (error){
+      NSLog(@"Connection did not succeed. Error description:%@ . Error domain :%@". Error code:%@", error.localizedDescription, error.domain, error.code);
+      }
+ 
+ //ezErr
+    ezErr(error, @"Connection did not succeed");
+ }
+```
+
+### Return on error with ezErrReturn
 ```
 [DatabaseAPI getThingyFromDodad: myDodad callback:^(Thingy * myThingy, NSError *error) {
  
@@ -75,11 +64,45 @@ Alternatively, if ezErrReturn finds an error it will return the method after log
     return;
  }
  
-// ezErr
+// ezErrReturn
  if (!myThing){
     ezErrReturn(error, [NSString stringWithFormat:@"Couldn't get thing from dodad: %@",myDodad);
      }
 }
+```
+### Call a block and return on error with ezErrBlockReturn
+```
+-(void)cachedAuthenticateToTumBookWithCallback:(AsyncCallback)authCallback
+ {
+     [DatabaseAPI fetchTumBookInfoWithCallback:^(NSError *err)
+     {
+         // Idiomatic
+         if (err)
+         {
+             NSLog(@"Error with TumBook info from cache. Error: %@", [err localizedDescription]);
+             authCallback(err, NO);
+             return;
+         }
+ 
+        // ezErrBlockReturn
+        ezErrBlockReturn(err, @"TumBook info from cache", authCallback(err, NO));
+ 
+        //...
+     }
+ }
+```
+
+## Safety first
+ezErr will not execute malformed NSError instances.
+```
+NSError *unsafeError = [NSError new];
+// or unsafeError = [NSError errorWithDomain:nil code:5 userInfo: nil];
+
+NSLog(@"Wonder what's in here ... %@", [unsafeError localizedDescription]);
+// Crashes, SIGKILL
+
+ezErr(unsafeError, @"Hmmm");
+// Does nothing
 ```
 
 
