@@ -67,7 +67,7 @@ if (! ezErr(error, @"No foo for you"))
  if (!myThing){
     ezErrReturn(error, [NSString stringWithFormat:@"Couldn't get thing from dodad: %@",myDodad);
      }
-}
+}];
 ```
 ### Call a block and return on error with ezErrBlockReturn
 ```Objective-C
