@@ -1,0 +1,2 @@
+# ezErr
+Civilized NSError handling
