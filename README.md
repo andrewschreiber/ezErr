@@ -1,7 +1,7 @@
 # ezErr
-Civilized NSError handling. Never NSLog an error again.
+Never NSLog an error again.
 
-ezErr helps replace boilerplate for handling NSError with code that provides more functionality, including *detailed logs*, *nil-safety*, and *error data export*. 
+ezErr replaces NSError-handling boilerplate with more functionality, including *detailed logs*, *nil-safety*, and *error data export*. 
 ```
 NSError *err = [NSError errorWithDomain:@"testDomain" 
                                    code:4 
