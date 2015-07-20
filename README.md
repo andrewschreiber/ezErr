@@ -4,22 +4,22 @@ Never NSLog an error again!
 ezErr are three macros that replace NSError-handling boilerplate with *detailed logs*, *error data export*, *tighter conditionals*, and *more safety*. 
 
 ## Logging
-
-    NSDictionary *userInfo = @{ NSLocalizedDescriptionKey : @"This is an example localized Description"};
-    NSError *err = [NSError errorWithDomain:@"testDomain" 
+```Objective-C
+NSDictionary *userInfo = @{ NSLocalizedDescriptionKey : @"This is an example localized Description"};
+NSError *err = [NSError errorWithDomain:@"testDomain" 
                                    code:4 
                                   userInfo:userInfo];
     
-    ezErr(err, @"Demoing ezErr") 
-    // The 2nd argument is an optional NSString for context-relevant info
-
+ezErr(err, @"Demoing ezErr") 
+// The 2nd argument is an optional NSString for context-relevant info
+```
 Calling ezErr logs this into the console:
 
 ![](http://i.imgur.com/Ht7rGDa.png)
 
 ## Export
 ezErr will also post to defaultCenter a notification, kEzErrNotification, with the error data as the userInfo dictionary. Useful for analytics or informing the user.
-```
+```Objective-C
     kEzErrCodeKey = 4;
     kEzErrDateKey = "2015-07-20 14:47:38 +0000";
     kEzErrDetailKey = "Demoing ezErr";
@@ -32,7 +32,7 @@ ezErr will also post to defaultCenter a notification, kEzErrNotification, with t
 
 ## Tighter conditionals
 ezErr can be embedded in an if statement, and will still log and export if the NSError is valid.
-```
+```Objective-C
 [myObject fooWithError:&error];
 if (! ezErr(error, @"No foo for you"))
 {
@@ -41,7 +41,7 @@ if (! ezErr(error, @"No foo for you"))
 ```
 
 ### Skip the if
-```
+```Objective-C
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
 // Idiomatic
     if (error){
@@ -54,7 +54,7 @@ if (! ezErr(error, @"No foo for you"))
 ```
 
 ### Return on error with ezErrReturn
-```
+```Objective-C
 [DatabaseAPI getThingyFromDodad: myDodad callback:^(Thingy * myThingy, NSError *error) {
  
 // Idiomatic
@@ -70,7 +70,7 @@ if (! ezErr(error, @"No foo for you"))
 }
 ```
 ### Call a block and return on error with ezErrBlockReturn
-```
+```Objective-C
 -(void)cachedAuthenticateToTumBookWithCallback:(AsyncCallback)authCallback
  {
      [DatabaseAPI fetchTumBookInfoWithCallback:^(NSError *err)
@@ -83,7 +83,7 @@ if (! ezErr(error, @"No foo for you"))
              return;
          }
  
-        // ezErrBlockReturn
+        // ezErrBlockReturn. The block will be executed after the notification, but before the return.
         ezErrBlockReturn(err, @"TumBook info from cache", authCallback(err, NO));
  
         //...
@@ -94,7 +94,7 @@ All three macros will do logging and exporting if passed a valid NSError.
 
 ## Safety first
 ezErr will not execute malformed NSError instances.
-```
+```Objective-C
 NSError *unsafeError = [NSError new];
 // or unsafeError = [NSError errorWithDomain:nil code:5 userInfo: nil];
 
