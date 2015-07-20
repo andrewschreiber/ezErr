@@ -1,18 +1,46 @@
 # ezErr
 Never NSLog an error again.
 
-ezErr replaces NSError-handling boilerplate with more functionality, including *detailed logs*, *nil-safety*, and *error data export*. 
+ezErr replaces NSError-handling boilerplate with more functionality, including *detailed logs*,  *error data export*, and *tighter conditionals*. 
+
+## logging
 ```
 NSError *err = [NSError errorWithDomain:@"testDomain" 
                                    code:4 
                                   userInfo:@{NSLocalizedDescriptionKey: @"This is an example localized Description"}];
     
-ezErr(err, @"Demoing ezErr")
+ezErr(err, @"Demoing ezErr") // The 2nd argument is an optional NSString* for context-relevant info
 ```
 Logs this into the console:
 
 ![](http://i.imgur.com/Ht7rGDa.png)
 
+## export
+And posts a userInfo dictionary with notification name kEzErrNotification
+```
+    kEzErrCodeKey = 4;
+    kEzErrDateKey = "2015-07-20 14:47:38 +0000";
+    kEzErrDetailKey = "Demoing ezErr";
+    kEzErrDomainKey = testDomain;
+    kEzErrFileKey = "ViewController.m";
+    kEzErrFunctionKey = "-[ViewController viewDidLoad]";
+    kEzErrLineKey = 33;
+    kEzErrThreadKey = 1;
+```
+
+## tighter conditionals
+ezErr will log if and only if the NSError is a valid instance, removing the need for if checks on the error. 
+```
+ - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+ //ezErr
+ ezErr(error, nil);
+ 
+ // Idiomatic
+ if (error){
+    NSLog(@"Connection failed. Error description:%@ . Error domain :%@". Error code:%@", error.localizedDescription, error.domain, error.code);
+ }
+ }
+```
 
 
 //You can use ezErr(error, @"Details") to print out the detailed error logs even without embedding it in an if-statement. It will only log if there is a valid NSError.
