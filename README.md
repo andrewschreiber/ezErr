@@ -4,7 +4,7 @@
 ![MIT License](https://img.shields.io/github/license/mashape/apistatus.svg)
 ![Platform](https://img.shields.io/badge/platform-%20iOS%20-lightgrey.svg)
 
-Preprocessor voodoo.
+Preprocessor voodoo that makes NSError your friend.
 
 ##Example
 ```Objective-C
