@@ -29,7 +29,7 @@ If ```error``` contains an NSError:
 * Error code    : -31
 * * * * * * * * [End of ezErr log]
 ```
- ezErr will also post a notification named kEzErrNotification containing a userInfo dictionary with all the error info.
+ On error, ezErr will also post a notification named kEzErrNotification containing a userInfo dictionary with all the error info.
 
 ###Pattern 1
 Replace this:
