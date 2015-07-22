@@ -30,6 +30,16 @@ If ```error``` contains an NSError:
 * * * * * * * * [End of ezErr log]
 ```
  On error, ezErr will also post a notification named kEzErrNotification containing a userInfo dictionary with all the error info.
+```
+    kEzErrCodeKey = "-31";
+    kEzErrDateKey = "2015-07-22 09:40:53 +0000";
+    kEzErrDetailKey = "Foo failed";
+    kEzErrDomainKey = SuperMarioWorld;
+    kEzErrFileKey = "ViewController.m";
+    kEzErrFunctionKey = "-[ViewController fooWithError]";
+    kEzErrLineKey = 48;
+    kEzErrThreadKey = 1;
+```
 
 ###Pattern 1
 Replace this:
