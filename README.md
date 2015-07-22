@@ -48,13 +48,13 @@ Replace this:
 ```Objective-C
 if(error)
 {
-    NSLog(@"All those moments lost.. like tears in the rain... . Error: %@", error);
+    NSLog(@"It's important I can cmd-control-f this text to find where this happened. Error: %@", error");
     return;
 }
 ```
 with this:
 ```Objective-C
-ezErrReturn(error, [NSString stringWithFormat:@"Analytics HOOOOO: %@", self.keyVariable];
+ezErrReturn(error, @"Here's some useful information");
 ```
 
 ###Pattern 3
@@ -62,14 +62,14 @@ Replace this:
 ```Objective-C
 if(error)
 {
-    NSLog(@"It's important I can cmd-control-f this text to find where this happened. Error: %@", error");
+    NSLog(@"All those moments lost.. like tears in the rain... . Error: %@", error);
     callback(error, nil);
     return;
 }
 ```
 with this:
 ```Objective-C
-ezErrBlockReturn(error, @"Here's some useful information", callback(error, nil));
+ezErrBlockReturn(error, [NSString stringWithFormat:@"Analytics HOOOOO: %@", self.keyVariable], callback(error, nil));
 ```
 
 # An afterword: Best practices around NSError 
