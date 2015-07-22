@@ -38,10 +38,17 @@ if(error)
 {
     NSLog(@"I really don't mind writing this pattern for the 100th time. Error: %@", error);
 }
+else
+{
+    [self bar];
+}
 ```
 with this:
 ```Objective-C
-ezErr(error, @"My fingers feel great!);
+if (! ezErr(error, @"My fingers feel great!))
+{
+    [self bar];
+}
 ```
 
 ###Pattern 2
