@@ -4,6 +4,8 @@
 ![MIT License](https://img.shields.io/github/license/mashape/apistatus.svg)
 ![Platform](https://img.shields.io/badge/platform-%20iOS%20-lightgrey.svg)
 
+The NSError experience you wish you had growing up.
+
 ##Example
 ```Objective-C
 [self fooWithError: &error];
