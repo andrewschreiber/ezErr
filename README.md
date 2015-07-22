@@ -4,108 +4,30 @@
 ![MIT License](https://img.shields.io/github/license/mashape/apistatus.svg)
 ![Platform](https://img.shields.io/badge/platform-%20iOS%20-lightgrey.svg)
 
-ezErr consists of three macros that replace NSError-handling boilerplate with *detailed logs*, *error data export*, *tighter conditionals*, and *more safety*. 
-
-## Logging
+##Example
 ```Objective-C
-NSDictionary *userInfo = @{ NSLocalizedDescriptionKey : @"This is an example localized Description"};
-NSError *err = [NSError errorWithDomain:@"testDomain" 
-                                   code:4 
-                                  userInfo:userInfo];
-    
-ezErr(err, @"Demoing ezErr") 
-// The 2nd argument is an optional NSString for context-relevant info
-```
-Calling ezErr logs this into the console:
-
-![](http://i.imgur.com/Ht7rGDa.png)
-
-## Export
-ezErr will also post to defaultCenter a notification, kEzErrNotification, with the error data as the userInfo dictionary. Useful for analytics or informing the user.
-```Objective-C
-    kEzErrCodeKey = 4;
-    kEzErrDateKey = "2015-07-20 14:47:38 +0000";
-    kEzErrDetailKey = "Demoing ezErr";
-    kEzErrDomainKey = testDomain;
-    kEzErrFileKey = "ViewController.m";
-    kEzErrFunctionKey = "-[ViewController viewDidLoad]";
-    kEzErrLineKey = 33;
-    kEzErrThreadKey = 1;
-```
-
-## Tighter conditionals
-ezErr can be embedded in an if statement, and will still log and export if the NSError is valid.
-```Objective-C
-[myObject fooWithError:&error];
-if (! ezErr(error, @"No foo for you"))
+[FooWithError: &error];
+if (! ezErr(error, @"Foo failed"))
 {
-     bar();
+    NSLog(@"Foo succeeded);
 }
 ```
-
-### Skip the if
-```Objective-C
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-// Boilerplate
-    if (error){
-      NSLog(@"Connection did not succeed. Error description:%@ . Error domain :%@". Error code:%@", error.localizedDescription, error.domain, error.code);
-      }
- 
- //ezErr
-    ezErr(error, @"Connection did not succeed");
- }
+If ```error``` is nil:
 ```
-
-### Return on error with ezErrReturn
-```Objective-C
-[DatabaseAPI getThingyFromDodad: myDodad callback:^(Thingy * myThingy, NSError *error) {
- 
-// Boilerplate
- if (!myThing){
-    NSLog(@"Couldn't get thing from dodad: %@. Got error: %@", myDodad, [error localizedDescription]);
-    return;
- }
- 
-// ezErrReturn
- if (!myThing){
-    ezErrReturn(error, [NSString stringWithFormat:@"Couldn't get thing from dodad: %@",myDodad);
-     }
-}];
+Foo succeeded
 ```
-### Call a block and return on error with ezErrBlockReturn
-```Objective-C
--(void)cachedAuthenticateToTumBookWithCallback:(AsyncCallback)authCallback
- {
-     [DatabaseAPI fetchTumBookInfoWithCallback:^(NSError *err)
-     {
-         // Boilerplate
-         if (err)
-         {
-             NSLog(@"Error with TumBook info from cache. Error: %@", [err localizedDescription]);
-             authCallback(err, NO);
-             return;
-         }
- 
-        // ezErrBlockReturn. The block will be executed after the notification, but before the return.
-        ezErrBlockReturn(err, @"TumBook info from cache", authCallback(err, NO));
- 
-        //...
-     }
- }
+If ```error``` contains an NSError:
 ```
-All three macros will do logging and exporting if passed a valid NSError.
-
-## Safety first
-ezErr will not execute malformed NSError instances.
-```Objective-C
-NSError *unsafeError = [NSError new];
-// or unsafeError = [NSError errorWithDomain:nil code:5 userInfo: nil];
-
-NSLog(@"Wonder what's in here ... %@", [unsafeError localizedDescription]);
-// Crashes, SIGKILL
-
-ezErr(unsafeError, @"Hmmm");
-// Does nothing
+* * * * * * * * [NSError found]
+* Detail        : Foo failed
+* Description   : The princess is in another this castle.
+* Method name   : -[ViewController viewDidLoad]
+* File name     : ViewController.m
+* Line number   : 48
+* Main thread   : Yes
+* Error domain  : SuperMarioWorld
+* Error code    : -31
+* * * * * * * * [End of ezErr log]
 ```
 
 # Best practices around NSError 
