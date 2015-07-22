@@ -69,7 +69,8 @@ if(error)
 ```
 with this:
 ```Objective-C
-ezErrBlockReturn(error, [NSString stringWithFormat:@"Analytics HOOOOO: %@", self.keyVariable], callback(error, nil));
+NSString *analyticsHOOOO = self.keyVariable;
+ezErrBlockReturn(error, analyticsHOOOO, callback(error, nil));
 ```
 
 # An afterword: Best practices around NSError 
