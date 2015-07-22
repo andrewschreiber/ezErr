@@ -4,7 +4,7 @@
 ![MIT License](https://img.shields.io/github/license/mashape/apistatus.svg)
 ![Platform](https://img.shields.io/badge/platform-%20iOS%20-lightgrey.svg)
 
-Preprocessor voodoo that makes NSError your friend.
+Because you have better things to do than write log statements.
 
 ##Example
 ```Objective-C
