@@ -31,7 +31,7 @@ If ```error``` contains an NSError:
 * Error code    : -31
 * * * * * * * * [End of ezErr log]
 ```
- On error, ezErr will also post a notification named kEzErrNotification containing a userInfo dictionary with all the error info.
+ezErr will also post a notification named kEzErrNotification containing a userInfo dictionary with all the error info for analytics or displaying error to user.
 ```
     kEzErrCodeKey = "-31";
     kEzErrDateKey = "2015-07-22 09:40:53 +0000";
